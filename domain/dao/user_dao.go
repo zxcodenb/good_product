@@ -24,7 +24,6 @@ func NewUserDAO() *UserDAO {
 }
 
 // GetUserByID 根据ID从数据库中查找用户
-// 现在是 UserDAO 的一个方法
 func (ud *UserDAO) GetUserByID(id string) (*model.User, error) {
 	var user model.User
 	// 使用结构体内的 db 实例，而不是全局的 config.DB
@@ -39,21 +38,29 @@ func (ud *UserDAO) GetUserByID(id string) (*model.User, error) {
 	return &user, nil
 }
 
-// CreateUser 在数据库中创建一个新用户
-// 现在是 UserDAO 的一个方法
 func (ud *UserDAO) CreateUser(user *model.User) error {
 	// 使用结构体内的 db 实例
 	result := ud.db.Create(user)
 	return result.Error
 }
 
-func (ud *UserDAO) CheckUserExists(phoneNo string, name string) (bool, error) {
+// CheckUserExists 检查用户是否存在
+func (ud *UserDAO) CheckUserExists(phoneNo string) (bool, error) {
 
 	var count int64
-	//根据手机号和姓名查询用户
-	result := ud.db.Where("phone_no = ? AND name = ?", phoneNo, name).First(&count)
-	if result.Error != nil {
-		return false, result.Error
-	}
-	return count > 0, nil
+	//根据手机号查询用户
+	result := ud.db.Where("phone = ?", phoneNo).First(&count)
+	err := result.Count(&count).Error
+	return count > 0, err
+
+}
+
+// GetUserByPhone 根据phone获取用户
+func (ud *UserDAO) GetUserByphone(phone string) (*model.User, error) {
+
+	var user model.User
+	//根据name查询用户
+	result := ud.db.Where("name = ?", phone).First(&user)
+	return &user, result.Error
+
 }

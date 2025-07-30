@@ -31,7 +31,7 @@ func NewDatabaseConfig() *DatabaseConfig {
 		Port:     3306,
 		Username: "root",
 		Password: "zx197546",
-		Database: "item_value",
+		Database: "good_product",
 		Charset:  "utf8mb4",
 	}
 }

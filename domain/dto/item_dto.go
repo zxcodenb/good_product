@@ -5,10 +5,10 @@ import "github.com/shopspring/decimal"
 
 // ItemCreateRequest represents the request body for creating an item
 type ItemCreateRequest struct {
-	Name        string          `json:"name" binding:"required"`        // Item name
-	Description string          `json:"description"`                    // Item description
-	Price       decimal.Decimal `json:"price" binding:"required"`       // Item price
-	Remark      string          `json:"remark"`                         // Remark
+	Name        string          `json:"name" binding:"required"`  // Item name
+	Description string          `json:"description"`              // Item description
+	Price       decimal.Decimal `json:"price" binding:"required"` // Item price
+	Remark      string          `json:"remark"`                   // Remark
 }
 
 // ItemUpdateRequest represents the request body for updating an item
@@ -26,8 +26,8 @@ type ItemResponse struct {
 	Description string          `json:"description"` // Item description
 	Price       decimal.Decimal `json:"price"`       // Item price
 	Remark      string          `json:"remark"`      // Remark
-	CreatedAt   string          `json:"created_at"`  // Creation time
-	UpdatedAt   string          `json:"updated_at"`  // Update time
+	// CreatedAt   string          `json:"created_at"`  // Creation time
+	UpdatedAt string `json:"updated_at"` // Update time
 }
 
 // ItemListResponse represents the response body for a list of items
