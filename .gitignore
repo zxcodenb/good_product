@@ -1,0 +1,22 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+production/
+
+# VS Code
+.vscode/
+
+
+# macOS
+.DS_Store
+
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.out
