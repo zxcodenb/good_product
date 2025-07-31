@@ -2,16 +2,9 @@ package utils
 
 import (
 	"fmt"
-	"sync"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-)
-
-// DB 全局的数据库连接实例
-var (
-	db     *gorm.DB
-	dbOnec sync.Once
 )
 
 // DatabaseConfig 数据库配置结构体
@@ -37,16 +30,28 @@ func NewDatabaseConfig() *DatabaseConfig {
 }
 
 // Init 初始化数据库连接
-func Init() {
-	var err error
+func (config *DatabaseConfig) Init() (*gorm.DB, error) {
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
+		config.Username, config.Password, config.Host, config.Port, config.Database, config.Charset)
+
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	return db, nil
+}
+
+// InitDB 初始化数据库连接并返回 *gorm.DB 实例
+func InitDB() (*gorm.DB, error) {
 	config := NewDatabaseConfig() // 使用硬编码的配置
 	dsn := config.GetDSN()
 
-	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		// 如果数据库连接失败，程序直接 panic
-		panic(fmt.Sprintf("failed to connect database: %v", err))
+		return nil, fmt.Errorf("failed to connect database: %w", err)
 	}
+	return db, nil
 }
 
 // GetDSN 获取数据库连接字符串
@@ -55,7 +60,15 @@ func (dc *DatabaseConfig) GetDSN() string {
 		dc.Username, dc.Password, dc.Host, dc.Port, dc.Database, dc.Charset)
 }
 
-func GetDB() *gorm.DB {
-	dbOnec.Do(Init)
-	return db
+// CloseDB 关闭数据库连接
+func CloseDB(db *gorm.DB) {
+	if db != nil {
+		sqlDB, err := db.DB()
+		if err != nil {
+			fmt.Println("failed to get underlying sql.DB")
+		}
+		if err := sqlDB.Close(); err != nil {
+			fmt.Println("failed to close database connection")
+		}
+	}
 }

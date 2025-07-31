@@ -3,6 +3,7 @@ module item-value
 go 1.24
 
 require (
+	github.com/bwmarrin/snowflake v0.3.0
 	github.com/gin-gonic/gin v1.10.1
 	github.com/google/uuid v1.6.0
 	github.com/shopspring/decimal v1.4.0

@@ -1,18 +1,32 @@
 package routes
 
 import (
-	"item-value/api"
+	"item-value/controllers"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // SetupRouter 用于初始化所有路由
-func SetupRouter(r *gin.Engine) {
+func SetupRouter(r *gin.Engine, db *gorm.DB) {
 	// 创建用户控制器实例
-	userController := &api.UserController{}
+	userController := controllers.NewUserController(db)
+	itemController := controllers.NewUItemController(db)
 
-	// 注册用户相关路由
-	r.POST("/user", userController.CreateUser)
-	r.POST("/login", userController.Login)
+	userRoutes := r.Group("/users")
+	{
+		// 注册用户相关路由
+		userRoutes.POST("/user", userController.CreateUser)
+		userRoutes.POST("/login", userController.Login)
+
+	}
+
+	// 注册物品相关路由
+	itemRoutes := r.Group("/items")
+	{
+		itemRoutes.POST("", itemController.CreateItem)
+		itemRoutes.GET("", itemController.List)
+		itemRoutes.GET("/:id", itemController.GetItemById)
+	}
 
 }

@@ -20,11 +20,11 @@ type UserUpdateRequest struct {
 
 // UserResponse represents the response body for a user
 type UserResponse struct {
-	PhoneNo    string `json:"phone"`        // Phone number
-	Name       string `json:"name"`         // User name
-	Remark     string `json:"remark"`       // Remark
-	CreateTime string `json:"created_time"` // Creation time
-	UpdateTime string `json:"updated_time"` // Update time
+	PhoneNo    string    `json:"phone"`        // Phone number
+	Name       string    `json:"name"`         // User name
+	Remark     string    `json:"remark"`       // Remark
+	CreateTime time.Time `json:"created_time"` // Creation time
+	UpdateTime time.Time `json:"updated_time"` // Update time
 }
 
 // LoginResponse 登录响应

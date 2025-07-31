@@ -5,10 +5,10 @@ import (
 	"item-value/domain/dao"
 	"item-value/domain/dto"
 	"item-value/domain/model"
+	"item-value/utils"
 	"strconv"
 	"time"
 
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -16,9 +16,9 @@ type UserService struct {
 	userDAO *dao.UserDAO
 }
 
-func NewUserService() *UserService {
+func NewUserService(db *gorm.DB) *UserService {
 	return &UserService{
-		userDAO: dao.NewUserDAO(),
+		userDAO: dao.NewUserDAO(db),
 	}
 }
 
@@ -60,11 +60,11 @@ func (s *UserService) CreateUser(req dto.CreateUserRequest) (*dto.UserResponse, 
 
 	// 创建用户
 	user := model.User{
-		ID:         uuid.New().String(),
+		ID:         utils.GenerateSnowflakeID(),
 		Name:       req.Username,
 		Phone:      req.Phone,
-		CreateTime: time.Now().Format("2006-01-02 15:04:05"),
-		UpdateTime: time.Now().Format("2006-01-02 15:04:05"),
+		CreateTime: time.Now(),
+		UpdateTime: time.Now(),
 		Remark:     req.Remark,
 	}
 	// 密码加密
@@ -87,18 +87,3 @@ func (s *UserService) CreateUser(req dto.CreateUserRequest) (*dto.UserResponse, 
 	return &userRes, nil
 
 }
-
-// todo:wewe
-
-// // update user
-// func (s *UserService) UpdateUser(id string, req dto.UserUpdateRequest) (*dto.UserResponse, error) {
-
-// 	//查询用户
-// 	user, err := s.userDAO.GetUserByID(id)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	//更新用户信息
-
-// }
